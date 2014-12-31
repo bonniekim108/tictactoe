@@ -25,10 +25,20 @@
    	<p>Pick a team:
    		<br>
    		<label>
-   			<input type="radio" value="X" ng-model="playerX" /><strong>X</strong>
+   			<input 
+   				ng-disabled="!game.isPlayerChosen()"
+   				type="radio"
+   				value="X"
+   				ng-model="playerX" />
+   				<strong>X</strong>
 		</label>
 		<label>
-			<input type="radio" value="O" ng-model="playerO" /><strong>O</strong>
+			<input 
+				ng-disabled="!game.isPlayerChosen()"
+				type="radio"
+				value="O"
+				ng-model="playerO" />
+				<strong>O</strong>
 		</label>
 	</p>	
 	<h2 ng-show="currentPlayer == player">It's your turn</h2>	
