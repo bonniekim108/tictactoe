@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html ng-app='tttApp'>
 <head>
-	<link href='http://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Julius+Sans+One' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="css/style.css">
 	<script src="js/angular.min.js"></script>
 	<script src="https://cdn.firebase.com/js/client/2.0.4/firebase.js"></script>
@@ -10,7 +10,7 @@
 	<script src="js/tttController.js"></script>
 </head>
 
-<body ng-controller = "TttController as game">	
+<body ng-controller = "TttController">	
 
 	
 <div class="container">
@@ -26,7 +26,7 @@
    		<br>
    		<label>
    			<input 
-   				ng-disabled="!game.isPlayerChosen()"
+   				ng-disabled="!isPlayerChosen()"
    				type="radio"
    				value="X"
    				ng-model="playerX" />
@@ -34,7 +34,7 @@
 		</label>
 		<label>
 			<input 
-				ng-disabled="!game.isPlayerChosen()"
+				ng-disabled="!isPlayerChosen()"
 				type="radio"
 				value="O"
 				ng-model="playerO" />
@@ -44,27 +44,27 @@
 	<h2 ng-show="currentPlayer == player">It's your turn</h2>	
 	<h2 ng-show="currentPlayer != player">Wait your turn, please</h2>
 
-		<table class="grid"><!--  ng-click="game.changeColor(square)" ng-class=" { yellow: game.isSet(game.xturn, square), blue: game.isSet(game.oturn, square) }"> -->
+		<table class="grid">
 	      	<tr>
-	      		<td ng-click="game.playGrid(0,0)">{{ game.gameBoard[0][0]}}</td>
-	      		<td ng-click="game.playGrid(0,1)">{{ game.gameBoard[0][1]}}</td>
-	      		<td ng-click="game.playGrid(0,2)">{{ game.gameBoard[0][2]}}</td>
+	      		<td ng-click="playGrid(0,0)">{{ gameBoard[0][0]}}</td>
+	      		<td ng-click="playGrid(0,1)">{{ gameBoard[0][1]}}</td>
+	      		<td ng-click="playGrid(0,2)">{{ gameBoard[0][2]}}</td>
 	      	</tr>
 	
             <tr>
-	      		<td ng-click="game.playGrid(1,0)">{{ game.gameBoard[1][0] }}</td>
-	      		<td ng-click="game.playGrid(1,1)">{{ game.gameBoard[1][1] }}</td>
-	      		<td ng-click="game.playGrid(1,2)">{{ game.gameBoard[1][2] }}</td>
+	      		<td ng-click="playGrid(1,0)">{{ gameBoard[1][0] }}</td>
+	      		<td ng-click="playGrid(1,1)">{{ gameBoard[1][1] }}</td>
+	      		<td ng-click="playGrid(1,2)">{{ gameBoard[1][2] }}</td>
 	      	</tr>
 	      		
              <tr>
-               	<td ng-click="game.playGrid(2,0)">{{ game.gameBoard[2][0] }}</td>
-               	<td ng-click="game.playGrid(2,1)">{{ game.gameBoard[2][1] }}</td>
-               	<td ng-click="game.playGrid(2,2)">{{ game.gameBoard[2][2] }}</td>
+               	<td ng-click="playGrid(2,0)">{{ gameBoard[2][0] }}</td>
+               	<td ng-click="playGrid(2,1)">{{ gameBoard[2][1] }}</td>
+               	<td ng-click="playGrid(2,2)">{{ gameBoard[2][2] }}</td>
             </tr>
         </table>      
-   		<button class="btn btn-play-again" ng-click="game.resetGame()">new game</button>
-   	</main>
+   		<button class="btn btn-play-again" ng-click="resetGame()">PLAY</button>
+   </main>
 </div>
 </body>	
 </html>

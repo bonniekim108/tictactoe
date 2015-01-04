@@ -12,69 +12,75 @@ function TttController($firebase, $scope) {
         var game = $firebase(ref).$asObject();
         return game;
     }
+        //calls firebase function. Saves object in $scope.game//
+    $scope.game = getGame();
+    
+
+    $scope.game.endGame = false;
+    $scope.game.currentPlayer = null;
+    $scope.game.$save();
+
+    $scope.startGame = startGame;
+    $scope.resetGame = resetGame;
+    $scope.playGrid = playGrid;
+    $scope.isSet = isSet;
+    $scope.tieGame = tieGame;
 
 
-    var self = this;
-    self.startGame = startGame;
-    self.endGame = false;
-    self.resetGame = resetGame;
-    self.playGrid = playGrid;
-    self.isSet = isSet;
-    self.tieGame = tieGame;
-    self.chooseCell = null;
-    self.currentPlayer = null;
 
-    self.isPlayerChosen = function() {
-        return !self.currentPlayer;
+    $scope.isPlayerChosen = function() {
+        return !$scope.game.currentPlayer;
     };    
+    //$scope.$watch for monitoring scope values for changes//
 
     $scope.$watch('playerX', playerChosen);
     $scope.$watch('playerO', playerChosen);
 
     function playerChosen(newValue, oldValue) {
-        self.currentPlayer = newValue;
+        $scope.game.currentPlayer = newValue;
     };
 
 
 function startGame() {
 
-    self.gameBoard = [["", "", ""], ["", "", ""], ["", "", ""]]; //empty gameboard at the start of each game"
-    self.xturn = true;  
-    self.oturn = false;
-    self.endGame = false;
+    $scope.game.board = [["", "", ""], ["", "", ""], ["", "", ""]]; //empty gameboard at the start of each game"
+    $scope.game.xturn = true;  
+    $scope.game.oturn = false;
+    $scope.game.endGame = false;
+    $scope.game.$save();
 }   
 
 
 
 function playGrid(row, column) {       //turn-taking between players
-    if (self.endGame === true) {
+    if ($scope.game.endGame === true) {
         alert('game ended');
         return;
     }
 
 
-    if(self.xturn === true) {
-        self.gameBoard[row][column] = "x";
+    if($scope.xturn === true) {
+        $scope.game.board[row][column] = "x";
     }  else {
-        self.gameBoard[row][column] = "o";
+        $scope.game.board[row][column] = "o";
     }
 
    
     if (isWinner('x') === true) {
         alert('X won');
-        self.endGame = true;
+        $scope.game.endGame = true;
         return;
     }
 
     if (isWinner('o') === true) {
         alert('O won');
-        self.endGame = true;
+        $scope.game.endGame = true;
         return;
     }
 
     if (tieGame() === true) {
         alert('Game was tied');
-        self.endGame = true;
+        $scope.game.endGame = true;
         return;
     }
 
@@ -82,13 +88,14 @@ function playGrid(row, column) {       //turn-taking between players
 
     }
 
-    self.xturn = !self.xturn;
+    $scope.xturn = !$scope.xturn;
 
+    $scope.game.$save();
     }
 
 function gridHasEmptyField () {
     var result = false,
-        grid = self.gameBoard;
+        grid = $scope.game.board;
 
     for (var i = (grid.length - 1); i >= 0; --i) {
         var element = grid[i];
@@ -107,9 +114,10 @@ function gridHasEmptyField () {
 };    
 
 function resetGame() {              //when players press "reset" button, gameboard becomes empty again
-    self.gameBoard = [["", "", ""], ["", "", ""], ["", "", ""]];
-    self.xturn = false;
-    self.oturn = false;
+    $scope.game.board = [["", "", ""], ["", "", ""], ["", "", ""]];
+    $scope.game.xturn = false;
+    $scope.game.oturn = false;
+    $scope.game.$save();
 }
 
 function isSet(something, square) {
@@ -123,47 +131,47 @@ function isWinner(player) {
 
         for (var j = 0; j < 3; j++) {
 
-            if(self.gameBoard[0][0] == player && 
-            self.gameBoard[0][1] == player && self.gameBoard[0][2] == player) {
+            if($scope.game.board[0][0] == player && 
+            $scope.game.board[0][1] == player && $scope.game.board[0][2] == player) {
                 return true;
                               
             } 
 
-            if(self.gameBoard[1][0] == player && 
-            self.gameBoard[1][1] == player && self.gameBoard[1][2] == player) {
+            if($scope.game.board[1][0] == player && 
+            $scope.game.board[1][1] == player && $scope.game.board[1][2] == player) {
                 return true; 
                               
             }
 
-            if(self.gameBoard[2][0] == player &&
-            self.gameBoard[2][1] == player && self.gameBoard[2][2] == player) {
+            if($scope.game.board[2][0] == player &&
+            $scope.game.board[2][1] == player && $scope.game.board[2][2] == player) {
                 return true; 
                               
             }
 
-            if(self.gameBoard[0][0] == player &&
-             self.gameBoard[1][0] == player && self.gameBoard[2][0] == player) {
+            if($scope.game.board[0][0] == player &&
+             $scope.game.board[1][0] == player && $scope.game.board[2][0] == player) {
                 return true;   
                              
             }
 
-            if(self.gameBoard[1][0] == player &&
-            self.gameBoard[1][1] == player && self.gameBoard[1][2] == player) {
+            if($scope.game.board[1][0] == player &&
+            $scope.game.board[1][1] == player && $scope.game.board[1][2] == player) {
                 return true;    
                               
             }
-            if(self.gameBoard[2][0] == player &&
-            self.gameBoard[2][1] == player && self.gameBoard[2][2] == player) {
+            if($scope.game.board[2][0] == player &&
+            $scope.game.board[2][1] == player && $scope.game.board[2][2] == player) {
                 return true;
                                     
             }
-            if(self.gameBoard[0][0] == player &&
-            self.gameBoard[1][1] == player && self.gameBoard[2][2] == player) {
+            if($scope.game.board[0][0] == player &&
+            $scope.game.board[1][1] == player && $scope.game.board[2][2] == player) {
                 return true;
                                
             }
-            if(self.gameBoard[0][2] == player &&
-             self.gameBoard[1][1] == player && self.gameBoard[2][0] == player) {
+            if($scope.game.board[0][2] == player &&
+             $scope.game.board[1][1] == player && $scope.game.board[2][0] == player) {
                 return true; 
                                  
             }
@@ -180,15 +188,15 @@ function tieGame() {
     for (var i = 0; i < 3; i++) {
 
         for (var j = 0; j < 3; j++) {            
-            if (((self.gameBoard[0][0] == "x") || (self.gameBoard[0][0] == "o")) &&
-                ((self.gameBoard[0][1] == "x") || (self.gameBoard[0][1] == "o")) &&
-                ((self.gameBoard[0][2] == "x") || (self.gameBoard[0][2] == "o")) &&
-                ((self.gameBoard[1][0] == "x") || (self.gameBoard[1][0] == "o")) &&
-                ((self.gameBoard[1][1] == "x") || (self.gameBoard[1][1] == "o")) &&
-                ((self.gameBoard[1][2] == "x") || (self.gameBoard[1][2] == "o")) &&
-                ((self.gameBoard[2][0] == "x") || (self.gameBoard[2][0] == "o")) &&
-                ((self.gameBoard[2][1] == "x") || (self.gameBoard[2][1] == "o")) &&
-                ((self.gameBoard[2][2] == "x") || (self.gameBoard[2][2] == "o"))) {
+            if ((($scope.game.board[0][0] == "x") || ($scope.game.board[0][0] == "o")) &&
+                (($scope.game.board[0][1] == "x") || ($scope.game.board[0][1] == "o")) &&
+                (($scope.game.board[0][2] == "x") || ($scope.game.board[0][2] == "o")) &&
+                (($scope.game.board[1][0] == "x") || ($scope.game.board[1][0] == "o")) &&
+                (($scope.game.board[1][1] == "x") || ($scope.game.board[1][1] == "o")) &&
+                (($scope.game.board[1][2] == "x") || ($scope.game.board[1][2] == "o")) &&
+                (($scope.game.board[2][0] == "x") || ($scope.game.board[2][0] == "o")) &&
+                (($scope.game.board[2][1] == "x") || ($scope.game.board[2][1] == "o")) &&
+                (($scope.game.board[2][2] == "x") || ($scope.game.board[2][2] == "o"))) {
                     return true;
                 }
 
