@@ -7,15 +7,16 @@ angular
    //"the container for the rest of the stuff"
 function TttController($firebase, $scope) {    
 
+
     function getGame() {
         var ref = new Firebase('https://tttgameapp.firebaseio.com/tttgame');
         var game = $firebase(ref).$asObject();
+        game.board = [["", "", ""], ["", "", ""], ["", "", ""]];
         return game;
     }
-        //calls firebase function. Saves object in $scope.game//
+
     $scope.game = getGame();
     
-
     $scope.game.endGame = false;
     $scope.game.currentPlayer = null;
     $scope.game.$save();
@@ -25,7 +26,10 @@ function TttController($firebase, $scope) {
     $scope.playGrid = playGrid;
     $scope.isSet = isSet;
     $scope.tieGame = tieGame;
-
+    $scope.isPlayerChosen = false;
+    $scope.playerChosen = playerChosen;
+    $scope.isOWinner = isOWinner;
+    $scope.isXWinner = isXWinner;
 
 
     $scope.isPlayerChosen = function() {
@@ -38,18 +42,20 @@ function TttController($firebase, $scope) {
 
     function playerChosen(newValue, oldValue) {
         $scope.game.currentPlayer = newValue;
-    };
+    }; 
 
 
-function startGame() {
+/*$scope.game.$loaded().then(  <--broken. Should stop players from choosing other sides' markers */
+    
+    function startGame() {
 
-    $scope.game.board = [["", "", ""], ["", "", ""], ["", "", ""]]; //empty gameboard at the start of each game"
+    $scope.game.board = [["", "", ""], ["", "", ""], ["", "", ""]]; //empty gameboard at the start of each game//
     $scope.game.xturn = true;  
     $scope.game.oturn = false;
     $scope.game.endGame = false;
     $scope.game.$save();
+    $scope.tieGame = false;
 }   
-
 
 
 function playGrid(row, column) {       //turn-taking between players
@@ -58,11 +64,22 @@ function playGrid(row, column) {       //turn-taking between players
         return;
     }
 
-
-    if($scope.xturn === true) {
+    if($scope.game.xturn) {
         $scope.game.board[row][column] = "x";
-    }  else {
+
+        $scope.currentPlayer = 'o';
+        $scope.game.xturn = false;
+        $scope.game.oturn = true;
+        $scope.game.$save();
+    }  
+    else if ($scope.game.oturn){
         $scope.game.board[row][column] = "o";
+
+        $scope.currentPlayer = 'x';
+        $scope.game.xturn = true;
+        $scope.game.oturn = false;
+        $scope.game.$save();
+
     }
 
    
@@ -124,9 +141,10 @@ function isSet(something, square) {
     return (something & square) == square;
 }
 
-//conditions for "x" to win the game
-function isWinner(player) {
+//winning conditions
 
+function isWinner(player) {
+    console.log(player);
     for (var i = 0; i < 3; i++) {
 
         for (var j = 0; j < 3; j++) {
@@ -181,14 +199,22 @@ function isWinner(player) {
     return false;
 }      
 
-            // tie in the game
-function tieGame() {
+function isXWinner () {
+    return isWinner("x");
+}
 
-    
+function isOWinner () {
+    return isWinner("o");
+}
+
+//tie conditions
+function tieGame() {    
     for (var i = 0; i < 3; i++) {
 
-        for (var j = 0; j < 3; j++) {            
-            if ((($scope.game.board[0][0] == "x") || ($scope.game.board[0][0] == "o")) &&
+        for (var j = 0; j < 3; j++) {  
+            console.log($scope.game)          
+            if (
+                (($scope.game.board[0][0] == "x") || ($scope.game.board[0][0] == "o")) &&
                 (($scope.game.board[0][1] == "x") || ($scope.game.board[0][1] == "o")) &&
                 (($scope.game.board[0][2] == "x") || ($scope.game.board[0][2] == "o")) &&
                 (($scope.game.board[1][0] == "x") || ($scope.game.board[1][0] == "o")) &&
@@ -196,8 +222,10 @@ function tieGame() {
                 (($scope.game.board[1][2] == "x") || ($scope.game.board[1][2] == "o")) &&
                 (($scope.game.board[2][0] == "x") || ($scope.game.board[2][0] == "o")) &&
                 (($scope.game.board[2][1] == "x") || ($scope.game.board[2][1] == "o")) &&
-                (($scope.game.board[2][2] == "x") || ($scope.game.board[2][2] == "o"))) {
+                (($scope.game.board[2][2] == "x") || ($scope.game.board[2][2] == "o"))
+                ) {
                     return true;
+
                 }
 
             }                   
