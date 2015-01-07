@@ -45,8 +45,6 @@ function TttController($firebase, $scope) {
     }; 
 
 
-/*$scope.game.$loaded().then(  <--broken. Should stop players from choosing other sides' markers */
-    
     function startGame() {
 
     $scope.game.board = [["", "", ""], ["", "", ""], ["", "", ""]]; //empty gameboard at the start of each game//
@@ -130,7 +128,7 @@ function gridHasEmptyField () {
 
 };    
 
-function resetGame() {              //when players press "reset" button, gameboard becomes empty again
+function resetGame() {              
     $scope.game.board = [["", "", ""], ["", "", ""], ["", "", ""]];
     $scope.game.xturn = false;
     $scope.game.oturn = false;
